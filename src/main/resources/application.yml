@@ -1,0 +1,49 @@
+spring.application.name: tsp-service
+
+logging:
+  file: ${user.home}/logs/${spring.application.name}.log
+  level:
+    org.springframework: INFO
+    com.boxfishedu: DEBUG
+    tk.mybatis: DEBUG
+server:
+  port: 8090
+  servlet-path: /tsp-service
+
+conf.accounts:
+  - userId: 1001
+    role: admin
+    username: creator
+    password: 1234
+  - userId: 1002
+    role: user
+    username: onlooker
+    password: 5687
+
+spring.profiles.active: production
+
+---
+spring:
+  profiles: production
+
+  datasource:
+    url: jdbc:mysql://boxfish2016outside.mysql.rds.aliyuncs.com:3306/member_test?useUnicode=true&characterEncoding=utf8
+    username: member
+    password: Box123456
+    driverClassName: com.mysql.jdbc.Driver
+    validation-query: SELECT 1
+    test-while-idle: true
+
+token-validate-api: "http://114.55.140.96:6901"
+ser.conf:
+  order-api-url: "http://online-api.inside.boxfish.cn/order/admin/page?" #订单查询接口
+  user-phonenum-url: "http://api.boxfish.cn/online/user/mobile/info?user_id=" #获取用户信息
+  user-id-url: "http://114.55.110.227:10011/mobile/"
+  fishcard-api-url: "http://online-api.boxfish.cn/fishcard/clientservice/backplat/list?" #鱼卡信息查询接口
+  user-info-url: "http://114.55.110.227:10011/info?user_id="
+  order-coupon-api-host: "http://online-api.inside.boxfish.cn"
+  user-api-host: "http://114.55.110.227:10011"
+  system-feedbacktag-url: "http://online-operation.boxfish.cn"
+  internet-ping-url: "http://online-api.log.boxfish.cn"
+  teaching-service-url: "http://online-api.boxfish.cn/teaching-service"
+  student-area-info-url: "http://114.55.176.117:10101/"
