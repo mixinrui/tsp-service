@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 
-import static com.boxfish.tsp.common.FormatUtil.toJson;
+import static com.boxfish.tsp.common.utils.FormatUtil.toJson;
 
 
 public class InvalidInputResponseBuilder {

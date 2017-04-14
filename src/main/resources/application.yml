@@ -7,7 +7,7 @@ logging:
     com.boxfishedu: DEBUG
     tk.mybatis: DEBUG
 server:
-  port: 8090
+  port: 8093
   servlet-path: /tsp-service
 
 conf.accounts:
@@ -20,16 +20,16 @@ conf.accounts:
     username: onlooker
     password: 5687
 
-spring.profiles.active: production
+spring.profiles.active: testOut
 
 ---
 spring:
-  profiles: production
+  profiles: testOut
 
   datasource:
-    url: jdbc:mysql://boxfish2016outside.mysql.rds.aliyuncs.com:3306/member_test?useUnicode=true&characterEncoding=utf8
-    username: member
-    password: Box123456
+    url:  jdbc:mysql://boxfish2016outside.mysql.rds.aliyuncs.com:3306/call_center?useUnicode=true&characterEncoding=utf8
+    username: call_center
+    password: Boxfish123456
     driverClassName: com.mysql.jdbc.Driver
     validation-query: SELECT 1
     test-while-idle: true

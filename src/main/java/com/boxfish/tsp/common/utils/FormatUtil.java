@@ -1,4 +1,4 @@
-package com.boxfish.tsp.common;
+package com.boxfish.tsp.common.utils;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
