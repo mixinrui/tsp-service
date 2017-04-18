@@ -1,19 +1,20 @@
 package com.boxfish.tsp.service;
 
+import com.boxfish.tsp.common.utils.FormatUtil;
 import com.boxfish.tsp.dto.TspTeamInfoOneWeekDto;
 import com.boxfish.tsp.entity.TspTeamInfo;
+import com.boxfish.tsp.enums.OperateOptionEnum;
 import com.boxfish.tsp.repository.TspTeamInfoRepository;
 import com.boxfish.tsp.vo.TspTeamInfoQuery;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 
 /**
@@ -27,7 +28,10 @@ public class TspTeamInfoService {
     @Autowired
     private TspTeamInfoRepository tspTeamInfoRepository;
 
-    public List<TspTeamInfoOneWeekDto> findByCurrentYearAndWeekNum(TspTeamInfoQuery tspTeamInfoQuery) {
+    public List<TspTeamInfoOneWeekDto> findByCurrentYearAndWeekNum(TspTeamInfoQuery tspTeamInfoQuery, String option) throws JsonProcessingException {
+
+        tspTeamInfoQuery = this.initTspTeamInfoQuery(tspTeamInfoQuery, option);
+
         List<TspTeamInfoOneWeekDto> listFinal = Lists.newArrayList();
         List<TspTeamInfo> tspTeamInfoRepositoryList = tspTeamInfoRepository.findByCurrentYearAndWeekNum(tspTeamInfoQuery.getCurrentYear(), tspTeamInfoQuery.getWeekNum());
         List<List<TspTeamInfo>> list = this.getListByGroup(tspTeamInfoRepositoryList);
@@ -67,5 +71,21 @@ public class TspTeamInfoService {
         return result;
     }
 
+    private TspTeamInfoQuery initTspTeamInfoQuery(TspTeamInfoQuery tspTeamInfoQuery, String option) throws JsonProcessingException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        if (Objects.isNull(tspTeamInfoQuery) || StringUtils.isEmpty(tspTeamInfoQuery.getWeekNum()) || StringUtils.isEmpty(tspTeamInfoQuery.getCurrentYear())) {
+            calendar.setTime(new Date());
+        } else {
+            calendar.set(Calendar.YEAR, Integer.parseInt(tspTeamInfoQuery.getCurrentYear()));
+            calendar.set(Calendar.WEEK_OF_YEAR, Integer.parseInt(tspTeamInfoQuery.getWeekNum()));
+        }
+        OperateOptionEnum operateOptionEnum = OperateOptionEnum.getVariable(option);
+        calendar.add(Calendar.WEEK_OF_YEAR, operateOptionEnum.getCode());
+        tspTeamInfoQuery.setWeekNum(String.valueOf(calendar.get(Calendar.WEEK_OF_YEAR)));
+        tspTeamInfoQuery.setCurrentYear(String.valueOf(calendar.get(Calendar.YEAR)));
+        System.out.println(FormatUtil.toJson(tspTeamInfoQuery));
+        return tspTeamInfoQuery;
+    }
 
 }

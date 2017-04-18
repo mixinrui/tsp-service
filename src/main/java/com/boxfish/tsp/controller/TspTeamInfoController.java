@@ -3,12 +3,11 @@ package com.boxfish.tsp.controller;
 import com.boxfish.tsp.common.JsonResultModel;
 import com.boxfish.tsp.service.TspTeamInfoService;
 import com.boxfish.tsp.vo.TspTeamInfoQuery;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -28,12 +27,9 @@ public class TspTeamInfoController {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    @RequestMapping(value = "/tsp/list", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public JsonResultModel queryOrderList(Pageable pageable, TspTeamInfoQuery tspTeamInfoQuery) throws InvocationTargetException, IllegalAccessException {
-        tspTeamInfoQuery.setCurrentYear("2017");
-        tspTeamInfoQuery.setWeekNum("11");
-        return JsonResultModel.newJsonResultModel(tspService.findByCurrentYearAndWeekNum(tspTeamInfoQuery));
-
+    @RequestMapping(value = "/tsp/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public JsonResultModel queryOrderList(@RequestBody TspTeamInfoQuery tspTeamInfoQuery, String option) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+        return JsonResultModel.newJsonResultModel(tspService.findByCurrentYearAndWeekNum(tspTeamInfoQuery, option));
     }
 
 }
