@@ -27,8 +27,8 @@ public class TspTeamInfoController {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    @RequestMapping(value = "/tsp/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public JsonResultModel queryOrderList(@RequestBody TspTeamInfoQuery tspTeamInfoQuery, String option) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
+    @RequestMapping(value = "/tsp/list")
+    public JsonResultModel queryOrderList(TspTeamInfoQuery tspTeamInfoQuery, String option) throws InvocationTargetException, IllegalAccessException, JsonProcessingException {
         return JsonResultModel.newJsonResultModel(tspService.findByCurrentYearAndWeekNum(tspTeamInfoQuery, option));
     }
 
