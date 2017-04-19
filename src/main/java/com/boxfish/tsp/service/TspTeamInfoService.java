@@ -8,6 +8,7 @@ import com.boxfish.tsp.repository.TspTeamInfoRepository;
 import com.boxfish.tsp.vo.TspTeamInfoQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,9 @@ public class TspTeamInfoService {
     @Autowired
     private TspTeamInfoRepository tspTeamInfoRepository;
 
-    public List<TspTeamInfoOneWeekDto> findByCurrentYearAndWeekNum(TspTeamInfoQuery tspTeamInfoQuery, String option) throws JsonProcessingException {
+    public Map findByCurrentYearAndWeekNum(TspTeamInfoQuery tspTeamInfoQuery, String option) throws JsonProcessingException {
 
+        Map map = Maps.newHashMap();
         tspTeamInfoQuery = this.initTspTeamInfoQuery(tspTeamInfoQuery, option);
 
         List<TspTeamInfoOneWeekDto> listFinal = Lists.newArrayList();
@@ -44,7 +46,10 @@ public class TspTeamInfoService {
             tspTeamInfoOneWeekDto.setDataList(listTemp);
             listFinal.add(tspTeamInfoOneWeekDto);
         }
-        return listFinal;
+        map.put("currentYear", tspTeamInfoQuery.getCurrentYear());
+        map.put("weekNum", tspTeamInfoQuery.getWeekNum());
+        map.put("dataList", listFinal);
+        return map;
     }
 
     private static List<List<TspTeamInfo>> getListByGroup(List<TspTeamInfo> list) {
