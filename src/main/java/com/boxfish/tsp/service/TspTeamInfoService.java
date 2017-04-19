@@ -1,5 +1,6 @@
 package com.boxfish.tsp.service;
 
+import com.boxfish.tsp.common.utils.DateUtil;
 import com.boxfish.tsp.common.utils.FormatUtil;
 import com.boxfish.tsp.dto.TspTeamInfoOneWeekDto;
 import com.boxfish.tsp.entity.TspTeamInfo;
@@ -33,7 +34,8 @@ public class TspTeamInfoService {
 
         Map map = Maps.newHashMap();
         tspTeamInfoQuery = this.initTspTeamInfoQuery(tspTeamInfoQuery, option);
-
+        map.put("monday", DateUtil.getDateFormat(this.getWhichWeekDay(tspTeamInfoQuery, 2)));
+        map.put("sunday", DateUtil.getDateFormat(this.getWhichWeekDay(tspTeamInfoQuery, 1)));
         List<TspTeamInfoOneWeekDto> listFinal = Lists.newArrayList();
         List<TspTeamInfo> tspTeamInfoRepositoryList = tspTeamInfoRepository.findByCurrentYearAndWeekNum(tspTeamInfoQuery.getCurrentYear(), tspTeamInfoQuery.getWeekNum());
         List<List<TspTeamInfo>> list = this.getListByGroup(tspTeamInfoRepositoryList);
@@ -59,14 +61,14 @@ public class TspTeamInfoService {
             if (map.containsKey(bean.getCurrentWeek())) {
                 List<TspTeamInfo> t = map.get(bean.getCurrentWeek());
                 t.add(new TspTeamInfo(bean.getCurrentWeek(), bean.getTeam(),
-                        bean.getTeamMemberName(), bean.getPhoneNum(), bean.getRemarks()));
+                        bean.getTeamMemberName(), bean.getPhoneNum(), bean.getRemarks(), bean.getTspDate()));
                 new ArrayList<TspTeamInfo>().add(new TspTeamInfo(bean.getCurrentWeek(), bean.getTeam(),
-                        bean.getTeamMemberName(), bean.getPhoneNum(), bean.getRemarks()));
+                        bean.getTeamMemberName(), bean.getPhoneNum(), bean.getRemarks(), bean.getTspDate()));
                 map.put(bean.getCurrentWeek(), t);
             } else {
                 List<TspTeamInfo> t = Lists.newArrayList();
                 t.add(new TspTeamInfo(bean.getCurrentWeek(), bean.getTeam(),
-                        bean.getTeamMemberName(), bean.getPhoneNum(), bean.getRemarks()));
+                        bean.getTeamMemberName(), bean.getPhoneNum(), bean.getRemarks(), bean.getTspDate()));
                 map.put(bean.getCurrentWeek(), t);
             }
         }
@@ -89,8 +91,19 @@ public class TspTeamInfoService {
         calendar.add(Calendar.WEEK_OF_YEAR, operateOptionEnum.getCode());
         tspTeamInfoQuery.setWeekNum(String.valueOf(calendar.get(Calendar.WEEK_OF_YEAR)));
         tspTeamInfoQuery.setCurrentYear(String.valueOf(calendar.get(Calendar.YEAR)));
+
         System.out.println(FormatUtil.toJson(tspTeamInfoQuery));
         return tspTeamInfoQuery;
     }
+
+    private Date getWhichWeekDay(TspTeamInfoQuery tspTeamInfoQuery, int whichDay) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.set(Calendar.YEAR, Integer.parseInt(tspTeamInfoQuery.getCurrentYear())); // 2016年
+        calendar.set(Calendar.WEEK_OF_YEAR, Integer.parseInt(tspTeamInfoQuery.getWeekNum())); // 设置为2016年的第10周
+        calendar.set(Calendar.DAY_OF_WEEK, whichDay); // 1表示周日，2表示周一，7表示周六
+        return calendar.getTime();
+    }
+
 
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by mk on 16/7/18.
@@ -17,12 +18,13 @@ public class TspTeamInfo extends BaseEntity {
     public TspTeamInfo() {
     }
 
-    public TspTeamInfo(String currentWeek, String team, String teamMemberName, String phoneNum, String remarks) {
+    public TspTeamInfo(String currentWeek, String team, String teamMemberName, String phoneNum, String remarks, Date tspDate) {
         this.currentWeek = currentWeek;
         this.team = team;
         this.teamMemberName = teamMemberName;
         this.phoneNum = phoneNum;
         this.remarks = remarks;
+        this.tspDate = tspDate;
     }
 
     @Id
@@ -43,5 +45,8 @@ public class TspTeamInfo extends BaseEntity {
     private String phoneNum;
 
     private String remarks;
+
+    @Temporal(TemporalType.DATE)
+    private Date tspDate;
 
 }
