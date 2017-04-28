@@ -31,16 +31,14 @@ public class TspTeamInfoService {
     private TspTeamInfoRepository tspTeamInfoRepository;
 
     public Map findByCurrentYearAndWeekNum(TspTeamInfoQuery tspTeamInfoQuery, String option) throws JsonProcessingException {
-
         Map map = Maps.newHashMap();
         tspTeamInfoQuery = this.initTspTeamInfoQuery(tspTeamInfoQuery, option);
-        map.put("monday", DateUtil.getDateFormat(this.getWhichWeekDay(tspTeamInfoQuery, 2)));
-        map.put("sunday", DateUtil.getDateFormat(this.getWhichWeekDay(tspTeamInfoQuery, 1)));
+        map.put("monday", DateUtil.getDateFormat(this.getWhichWeekDay(tspTeamInfoQuery, Calendar.MONDAY)));
+        map.put("sunday", DateUtil.getDateFormat(this.getWhichWeekDay(tspTeamInfoQuery, Calendar.SUNDAY)));
         List<TspTeamInfoOneWeekDto> listFinal = Lists.newArrayList();
         List<TspTeamInfo> tspTeamInfoRepositoryList = tspTeamInfoRepository.findByCurrentYearAndWeekNum(tspTeamInfoQuery.getCurrentYear(), tspTeamInfoQuery.getWeekNum());
         List<List<TspTeamInfo>> list = this.getListByGroup(tspTeamInfoRepositoryList);
-        for (int i = 0; i < list.size(); i++) {
-            List<TspTeamInfo> listTemp = list.get(i);
+        for (List<TspTeamInfo> listTemp : list){
             TspTeamInfoOneWeekDto tspTeamInfoOneWeekDto = new TspTeamInfoOneWeekDto();
             tspTeamInfoOneWeekDto.setCurrentYear(tspTeamInfoQuery.getCurrentYear());  //2017
             tspTeamInfoOneWeekDto.setWeekNum(tspTeamInfoQuery.getWeekNum());          //21
@@ -55,8 +53,8 @@ public class TspTeamInfoService {
     }
 
     private static List<List<TspTeamInfo>> getListByGroup(List<TspTeamInfo> list) {
-        List<List<TspTeamInfo>> result = new ArrayList<List<TspTeamInfo>>();
-        Map<String, List<TspTeamInfo>> map = new TreeMap<String, List<TspTeamInfo>>();
+        List<List<TspTeamInfo>> result = Lists.newArrayList();
+        Map<String, List<TspTeamInfo>> map = Maps.newTreeMap();
         for (TspTeamInfo bean : list) {
             if (map.containsKey(bean.getCurrentWeek())) {
                 List<TspTeamInfo> t = map.get(bean.getCurrentWeek());
